@@ -1,0 +1,20 @@
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/">
+        <img width="90px" src="/public/img/logo3.png" alt="" />
+      </a>
+    </div>
+
+    <ul class="nav navbar-nav">
+      {{ if user }}
+      <li>当前登录用户{{user.nickname}}</li>
+      <li><a href=/logout>退出</a></li>
+      {{ else }}
+      <li><a href=/login>登录</a></li>
+      <li><a href="/register">注册</a></li>
+      {{/if}}
+    </ul>
+  </div>
+</nav>
+
