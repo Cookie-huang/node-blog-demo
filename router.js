@@ -84,8 +84,8 @@ router.post("/register", function (req, res, next) {
         }
 
         req.session.user = {
-            nickname: user.nickname
-          };
+          nickname: user.nickname
+        };
         res.status(200).json({
           err_code: 0,
           message: "ok"

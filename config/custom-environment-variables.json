@@ -1,0 +1,10 @@
+// 自定义环境配置
+// 可以用来读取放在机器环境变量中的 邮箱密码 数据库密码 等等。
+// 课程： bilibili.com/video/BV1kt411k7A3?p=57
+{
+  "Customer": {
+    "dbConfig": {
+      "password": "app_password"
+    }
+  }
+}
