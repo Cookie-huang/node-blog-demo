@@ -2,12 +2,22 @@ const express = require("express");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const config = require("config");
+const starupDebugger = require("debug")("startup");
+const dbDebugger = require("debug")("db");
 const path = require("path");
 // const bodyParser = require("body-parser");
 const session = require("express-session");
-const router = require("./router");
+const logger = require("./middleware/logger");
+const home = require("./routes/home");
+const login = require("./routes/login");
+const register = require("./routes/register");
 
 const app = express();
+
+// 当环境变量 DEBUG 是 startup 的时候，这个调试信息会被打印。
+// window 修改环境变量:    set DEBUG=startup
+starupDebugger("app startup........");
+dbDebugger("db startup........");
 
 /*
 { 
@@ -26,8 +36,15 @@ app.use(helmet());
 // process.env.NODE_ENV   没配置的话，默认是 undefined
 // app.get("env")         没配置的话，默认是 "development"
 if (app.get("env") === "development") {
-  app.use(morgan("tiny"));
-  console.log("Morgan enabled...");
+  // GET / 200 2201 - 67.156 ms
+  // GET /public/img/logo3.png 200 7219 - 4.704 ms
+  // GET /node_modules/bootstrap/dist/css/bootstrap.css 200 198313 - 18.317 ms
+  // GET /node_modules/jquery/dist/jquery.js 200 287630 - 12.096 ms
+  // GET /node_modules/bootstrap/dist/js/bootstrap.js 200 136323 - 27.709 ms
+  // GET /public/img/avatar-default.png 200 1325 - 41.720 ms
+  // GET /favicon.ico 200 147 - 3.034 ms
+  /* app.use(morgan("tiny")); */
+  /* console.log("Morgan enabled..."); */
 }
 
 // 开放静态资源
@@ -37,8 +54,7 @@ app.use(
   express.static(path.join(__dirname, "./node_modules/"))
 );
 
-// 注册模板
-// view engine setup
+// 注册模板 view engine setup
 app.engine("html", require("express-art-template"));
 app.set("views", path.join(__dirname, "./views/"));
 
@@ -65,8 +81,13 @@ app.use(
   })
 );
 
+// 自定义中间件
+app.use(logger);
+
 // 配置路由
-app.use(router);
+app.use("/", home);
+app.use("/login", login);
+app.use("/register", register);
 
 // 配置一个处理 404 的中间件
 app.use(function (req, res) {
