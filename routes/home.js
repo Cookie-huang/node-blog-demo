@@ -1,19 +1,19 @@
 const express = require("express");
+const logined = require("../middleware/logined");
 
 const router = express.Router();
+const Blog = require("../models/blog");
 
-router.get("/", function (req, res) {
+router.get("/", logined, async (req, res) => {
+  const blogs = await Blog.find()
+    .populate("author", "nickname -_id")
+    .sort("-created_time")
+    .limit(10);
+
   res.render("index.html", {
-    user: req.session.user
+    user: req.user,
+    blogs
   });
-});
-
-router.get("/logout", function (req, res) {
-  // 清除登录状态
-  req.session.user = null;
-
-  // 重定向到登录页
-  res.redirect("/login");
 });
 
 module.exports = router;

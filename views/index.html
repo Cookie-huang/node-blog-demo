@@ -1,48 +1,52 @@
-{{extend './_layouts/home.html'}}
- {{block 'title'}}{{'多人博客 - 首页'}}{{/block}} 
-{{block 'body'}}
-<section class="container">
-  <ul class="media-list">
-    <li class="media">
-      <div class="media-left">
-        <a href="#">
-          <img
-            width="40"
-            height="40"
-            class="media-object"
-            src="/public/img/avatar-default.png"
-            alt="..."
-          />
-        </a>
+{{extend './_layouts/home.html'}} {{block 'title'}} {{'多人博客 - 首页'}}
+{{/block}} {{block 'body'}}
+<section class="container mt-5" id="blogs_wrapper">
+  {{each blogs}}
+  <div class="list-group">
+    <a
+      href="/blog/edit/{{ $value._id.toString()}}"
+      class="list-group-item list-group-item-action"
+    >
+      <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">{{$value.title}}</h5>
+        <small></small>
       </div>
-      <div class="media-body">
-        <h4 class="media-heading"><a href="/topics/123">Media heading</a></h4>
-        <p>
-          sueysok 回复了问题 • 2 人关注 • 1 个回复 • 187 次浏览 • 2017-10-20
-          13:45
-        </p>
-      </div>
-    </li>
-    <li class="media">
-      <div class="media-left">
-        <a href="#">
-          <img
-            width="40"
-            height="40"
-            class="media-object"
-            src="/public/img/avatar-default.png"
-            alt="..."
-          />
-        </a>
-      </div>
-      <div class="media-body">
-        <h4 class="media-heading"><a href="/topics/123">Media heading</a></h4>
-        <p>
-          sueysok 回复了问题 • 2 人关注 • 1 个回复 • 187 次浏览 • 2017-10-20
-          13:45
-        </p>
-      </div>
-    </li>
-  </ul>
+      <p class="mb-1">
+        {{$value.content}}
+      </p>
+      <small>创建时间：{{$value.created_time}}</small>
+      <button data-id="{{ $value._id.toString()}}">
+        删除
+      </button>
+    </a>
+  </div>
+  {{/each}}
 </section>
+{{/block}} {{block 'script'}}
+<script>
+  $("#blogs_wrapper button").on("click", function (e) {
+    e.preventDefault();
+    const res = confirm("confirm to delete ?");
+    if (res) {
+      const id = $(this).data("id");
+      $.ajax({
+        url: `/blog/delete/${id}`,
+        type: "delete",
+        success: function (data) {
+          // status = 200
+          if (data.err_code === 0) {
+            // 服务端重定向针对异步请求无效
+            window.location.href = "/";
+          } else {
+            window.alert(data.message);
+          }
+        },
+        error: function (err) {
+          // status = 400 500 ...
+          window.alert(err.responseJSON.message);
+        }
+      });
+    }
+  });
+</script>
 {{/block}}

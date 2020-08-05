@@ -16,5 +16,12 @@
     <script src="/node_modules/jquery/dist/jquery.js"></script>
     <script src="/node_modules/bootstrap/dist/js/bootstrap.js"></script>
     {{block 'script'}}{{/block}}
+    <script>
+      $("#logout").on("click", function () {
+        document.cookie =
+          "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        window.location.href = "/user/login";
+      });
+    </script>
   </body>
 </html>

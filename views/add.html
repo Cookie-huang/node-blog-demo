@@ -1,0 +1,49 @@
+{{extend './_layouts/home.html'}} {{block 'title'}} {{'多人博客 - 编辑'}}
+{{/block}} {{block 'body'}}
+<div class="container mt-5">
+  <form id="form">
+    <div class="form-group">
+      <label for="title">title</label>
+      <input
+        type="text"
+        class="form-control"
+        id="title"
+        name="title"
+        aria-describedby="emailHelp"
+      />
+    </div>
+    <div class="form-group">
+      <label for="content">content</label>
+      <input type="text" class="form-control" id="content" name="content" />
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+
+{{/block}} {{block 'script'}}
+<script>
+  $("#form").on("submit", function (e) {
+    e.preventDefault();
+    var formData = $(this).serialize();
+    $.ajax({
+      url: "/blog/add",
+      type: "post",
+      data: formData,
+      dataType: "json",
+      success: function (data) {
+        // status = 200
+        if (data.err_code === 0) {
+          // 服务端重定向针对异步请求无效
+          window.location.href = "/";
+        } else {
+          window.alert(data.message);
+        }
+      },
+      error: function (err) {
+        // status = 400 500 ...
+        window.alert(err.responseJSON.message);
+      }
+    });
+  });
+</script>
+{{/block}}

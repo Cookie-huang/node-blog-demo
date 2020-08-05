@@ -1,11 +1,17 @@
-// 开发环境配置
 {
-  "Customer": {
-    "dbConfig": {
-      "host": "dev-db-server"
-    },
-    "credit": {
-      "initialDays": 30
+  "dbConfig": {
+    "URI": "mongodb://",
+    "host": "localhost",
+    "database": "user",
+    "port": 5000,
+    "options": {
+      "useNewUrlParser": true,
+      "useUnifiedTopology": true,
+      "useFindAndModify": false,
+      "useCreateIndex": true
     }
+  },
+  "serverConfig": {
+    "port": 5000
   }
 }
